@@ -14,6 +14,17 @@ t_no* criaNo(){
 	return no;
 }
 
+t_no* criaTabuleiro(){
+	t_no* tab = criaNo();
+	for(i=0;i<2;i++){
+		for(j=0;j<6;j++){
+			tab->tabuleiro[i][j] = 4;
+		}
+		tab->tabuleiro[i][j] = 0;
+	}
+	return tab;
+}
+
 int main(){
 
 
