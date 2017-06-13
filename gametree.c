@@ -182,13 +182,8 @@ int percursoPos(t_no* r){
 
 int main(){
 	t_no* tab = criaTabuleiro();
-	tab = montaJogada(1,tab);
-	tab = montaJogada(5,tab);
-	tab = montaJogada(1,tab);
-	tab = montaJogada(1,tab);
-	tab = montaJogada(3,tab);
-	tab = montaJogada(2,tab);
-	tab = montaJogada(3,tab);
-	mostraTabuleiro(tab);
+	criaArvore(tab, 4);
+	printf("\n");
+	percursoPos(tab);
 	return 0;
 }
