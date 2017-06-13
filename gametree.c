@@ -39,7 +39,7 @@ void mostraTabuleiro(t_no* tab){
 	printf("\n");
 }
 
-t_no* jogada(int posicao, int jogador, t_no* tab){
+void jogada(int posicao, int jogador, t_no* tab){
 	int pedras, i, j;
 	i = jogador-1;
 	j = posicao-1;
@@ -58,12 +58,18 @@ t_no* jogada(int posicao, int jogador, t_no* tab){
 		}
 		i=0;
 	}
-
-
+	mostraTabuleiro(tab);
+	printf("\n");
 }
 
 int main(){
-
+	t_no* tab = criaTabuleiro();
+	mostraTabuleiro(tab);
+	printf("\n");
+	jogada(1,1,tab);
+	jogada(3,2,tab);
+	jogada(4,1,tab);
+	jogada(5,2,tab);
 
 	return 0;
 }
