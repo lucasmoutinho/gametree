@@ -15,6 +15,7 @@ t_no* criaNo(){
 }
 
 t_no* criaTabuleiro(){
+	int i, j;
 	t_no* tab = criaNo();
 	for(i=0;i<2;i++){
 		for(j=0;j<6;j++){
@@ -26,7 +27,7 @@ t_no* criaTabuleiro(){
 }
 
 void mostraTabuleiro(t_no* tab){
-	int i = 0;
+	int i = 0, j;
 	for(j=6;j>=0;j--){
 		printf("%d ", tab->tabuleiro[i][j]);
 	}
@@ -38,7 +39,26 @@ void mostraTabuleiro(t_no* tab){
 	printf("\n");
 }
 
-void jogada(int pos){
+t_no* jogada(int posicao, int jogador, t_no* tab){
+	int pedras, i, j;
+	i = jogador-1;
+	j = posicao-1;
+	pedras = tab->tabuleiro[i][j];
+	tab->tabuleiro[i][j] = 0;
+	j++;
+	while(pedras != 0){
+		while(pedras != 0 && i<2){
+			while(pedras != 0 && j<7){
+				tab->tabuleiro[i][j]+=1;
+				pedras--;
+				j++;
+			}
+			j=0;
+			i++;
+		}
+		i=0;
+	}
+
 
 }
 
