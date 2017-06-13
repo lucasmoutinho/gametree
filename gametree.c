@@ -28,12 +28,14 @@ t_no* criaTabuleiro(){
 
 void mostraTabuleiro(t_no* tab){
 	int i = 0, j;
-	for(j=6;j>=0;j--){
+	printf("  ");
+	for(j=5;j>=0;j--){
 		printf("%d ", tab->tabuleiro[i][j]);
 	}
+	printf("\n%d             %d\n", tab->tabuleiro[0][6], tab->tabuleiro[1][6]);
 	i++;
-	printf("\n");
-	for(j=0;j<7;j++){
+	printf("  ");
+	for(j=0;j<6;j++){
 		printf("%d ", tab->tabuleiro[i][j]);
 	}
 	printf("\n");
