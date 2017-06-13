@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 typedef struct no{
+	/*Jogador 1 == Computador && Jogador 2 == Usuário*/
 	int tabuleiro[2][7];
 	int jogador;
 	struct no* first;
@@ -98,32 +99,32 @@ t_no* montaJogada(int posicao, t_no* tab){
 		while(pedras != 0){
 			while(pedras != 0 && i<2){
 				while(pedras != 0 && j<7){
-					if( j == 6 && ((tab2->jogador == 1 && i==1) || (tab2->jogador == 2 && i==0))){
+					if( j == 6 && ((tab->jogador == 1 && i==1) || (tab->jogador == 2 && i==0))){
 						j++;
 					}
 					else{
 						tab2->tabuleiro[i][j]+=1;
 						pedras--;
 						if(pedras == 0 && j != 6){
-							if(tab2->jogador == 1){
+							if(tab->jogador == 1){
 								tab2->jogador = 2;
 							}
 							else{
 								tab2->jogador = 1;
 							}
-							if(tab2->jogador == 1 && i == 0 && tab2->tabuleiro[0][j] == 1 && tab2->tabuleiro[1][j] != 0){
-								tab2->tabuleiro[0][6] = 1 + tab2->tabuleiro[1][j];
-								tab2->tabuleiro[1][j] = 0;
+							if(tab->jogador == 1 && i == 0 && tab2->tabuleiro[0][j] == 1 && tab2->tabuleiro[1][5-j] != 0){
+								tab2->tabuleiro[0][6] += (1 + tab2->tabuleiro[1][5-j]);
+								tab2->tabuleiro[1][5-j] = 0;
 								tab2->tabuleiro[0][j] = 0;
 							}
-							else if(tab2->jogador == 2 && i == 1 && tab2->tabuleiro[1][j] == 1 && tab2->tabuleiro[0][j] != 0){
-								tab2->tabuleiro[1][6] = 1 + tab2->tabuleiro[0][j];
-								tab2->tabuleiro[0][j] = 0;
+							else if(tab->jogador == 2 && i == 1 && tab2->tabuleiro[1][j] == 1 && tab2->tabuleiro[0][5-j] != 0){
+								tab2->tabuleiro[1][6] += (1 + tab2->tabuleiro[0][5-j]);
+								tab2->tabuleiro[0][5-j] = 0;
 								tab2->tabuleiro[1][j] = 0;
 							}
 						}
 						if(pedras == 0 && testeAcabou(tab)){
-							if(tab2->jogador==1){
+							if(tab->jogador==1){
 								for(k=0;k<7;k++){
 									tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
 								}
@@ -181,8 +182,13 @@ int percursoPos(t_no* r){
 
 int main(){
 	t_no* tab = criaTabuleiro();
-	criaArvore(tab, 4);
-	printf("\n");
-	percursoPos(tab);
+	tab = montaJogada(1,tab);
+	tab = montaJogada(5,tab);
+	tab = montaJogada(1,tab);
+	tab = montaJogada(1,tab);
+	tab = montaJogada(3,tab);
+	tab = montaJogada(2,tab);
+	tab = montaJogada(3,tab);
+	mostraTabuleiro(tab);
 	return 0;
 }
