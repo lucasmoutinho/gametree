@@ -25,6 +25,23 @@ t_no* criaTabuleiro(){
 	return tab;
 }
 
+void mostraTabuleiro(t_no* tab){
+	int i = 0;
+	for(j=6;j>=0;j--){
+		printf("%d ", tab->tabuleiro[i][j]);
+	}
+	i++;
+	printf("\n");
+	for(j=0;j<7;j++){
+		printf("%d ", tab->tabuleiro[i][j]);
+	}
+	printf("\n");
+}
+
+void jogada(int pos){
+
+}
+
 int main(){
 
 
