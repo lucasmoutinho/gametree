@@ -225,14 +225,14 @@ t_no* organizaRodada(t_no* tab){
 				getchar();
 				naovalido = 1;
 			}
-			while(tab->tabuleiro[1][posicao] == 0){
+			while(tab->tabuleiro[1][posicao-1] == 0){
 				printf("Posicao invalida, não existem pedras nesta, escolha outra\n");
 				scanf("%d", &posicao);
 				getchar();
 				naovalido = 1;
 			}
-			printf("Voce selecionou a posicao %d\n\n", posicao); 
 		}
+		printf("Voce selecionou a posicao %d\n\n", posicao); 
 	}
 	pressioneEnter();
 	tab2 = montaJogada(posicao, tab);
