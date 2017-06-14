@@ -125,40 +125,43 @@ t_no* montaJogada(int posicao, t_no* tab){
 			while(pedras != 0 && i<2){
 				while(pedras != 0 && j<7){
 					if( j == 6 && ((tab->jogador == 1 && i==1) || (tab->jogador == 2 && i==0))){
-						j++;
-					}
-					else{
-						tab2->tabuleiro[i][j]+=1;
-						pedras--;
-						if(pedras == 0 && j != 6){
-							if(tab->jogador == 1){
-								tab2->jogador = 2;
-							}
-							else{
-								tab2->jogador = 1;
-							}
-							if(tab->jogador == 1 && i == 0 && tab2->tabuleiro[0][j] == 1 && tab2->tabuleiro[1][5-j] != 0){
-								tab2->tabuleiro[0][6] += (1 + tab2->tabuleiro[1][5-j]);
-								tab2->tabuleiro[1][5-j] = 0;
-								tab2->tabuleiro[0][j] = 0;
-							}
-							else if(tab->jogador == 2 && i == 1 && tab2->tabuleiro[1][j] == 1 && tab2->tabuleiro[0][5-j] != 0){
-								tab2->tabuleiro[1][6] += (1 + tab2->tabuleiro[0][5-j]);
-								tab2->tabuleiro[0][5-j] = 0;
-								tab2->tabuleiro[1][j] = 0;
-							}
+						j=0;
+						if(i==1){
+							i=0;
 						}
-						if(pedras == 0 && testeAcabou(tab2)){
+						else{
+							i=1;
+						}
+					}
+					tab2->tabuleiro[i][j]+=1;
+					pedras--;
+					if(pedras == 0 && j != 6){
+						if(tab->jogador == 1){
+							tab2->jogador = 2;
+						}
+						else{
+							tab2->jogador = 1;
+						}
+						if(tab->jogador == 1 && i == 0 && tab2->tabuleiro[0][j] == 1 && tab2->tabuleiro[1][5-j] != 0){
+							tab2->tabuleiro[0][6] += (1 + tab2->tabuleiro[1][5-j]);
+							tab2->tabuleiro[1][5-j] = 0;
+							tab2->tabuleiro[0][j] = 0;
+						}
+						else if(tab->jogador == 2 && i == 1 && tab2->tabuleiro[1][j] == 1 && tab2->tabuleiro[0][5-j] != 0){
+							tab2->tabuleiro[1][6] += (1 + tab2->tabuleiro[0][5-j]);
+							tab2->tabuleiro[0][5-j] = 0;
+							tab2->tabuleiro[1][j] = 0;
+						}
+						if(testeAcabou(tab2)){
 							for(k=0;k<6;k++){
 								tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
 								tab2->tabuleiro[1][k]=0;
 								tab2->tabuleiro[0][6]+=tab2->tabuleiro[0][k];
 								tab2->tabuleiro[0][k]=0;
 							}
-
 						}
-						j++;
 					}
+					j++;
 				}
 				j=0;
 				i++;
