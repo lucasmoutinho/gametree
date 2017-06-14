@@ -384,7 +384,7 @@ t_no* organizaRodada(t_no* tab){
 int dificuldadeDoJogo(){
 	char hardenough;
 	printf("Qual a dificuldade do jogo?\n\n");
-	printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D): ");
+	printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D):\n\n");
 	scanf(" %c", &hardenough);
 	getchar();
 	printf("\n");
@@ -442,7 +442,6 @@ int organizaPartida(){
 	else if(tab->tabuleiro[1][6] < tab->tabuleiro[0][6]){
 		printf("O computador ganhou...");
 		printf("\n\n¯\\_(ツ)_/¯\n\n");
-	
 	}
 	else{
 		printf("O jogo empatou!\n\n");
