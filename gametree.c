@@ -25,10 +25,10 @@ t_no* criaNo(){
 	return no;
 }
 
-t_no* criaTabuleiro(){
+t_no* criaTabuleiro(int comeca){
 	int i, j;
 	t_no* tab = criaNo();
-	tab->jogador = 1;
+	tab->jogador = comeca;
 	for(i=0;i<2;i++){
 		for(j=0;j<6;j++){
 			tab->tabuleiro[i][j] = 4;
@@ -82,7 +82,7 @@ void mostraTabuleiro(t_no* tab){
 int testeAcabou(t_no* tab){
 	int acabou = 1, j = 0;
 	if(tab->jogador == 1){
-		while(acabou == 1 && j<7){
+		while(acabou == 1 && j<6){
 			if(tab->tabuleiro[0][j] != 0){
 				acabou = 0;
 			}
@@ -90,7 +90,7 @@ int testeAcabou(t_no* tab){
 		}
 	}
 	else{
-		while(acabou == 1 && j<7){
+		while(acabou == 1 && j<6){
 			if(tab->tabuleiro[1][j] != 0){
 				acabou = 0;
 			}
@@ -137,7 +137,7 @@ t_no* montaJogada(int posicao, t_no* tab){
 								tab2->tabuleiro[1][j] = 0;
 							}
 						}
-						if(pedras == 0 && testeAcabou(tab)){
+						if(pedras == 0 && testeAcabou(tab2)){
 							if(tab->jogador==1){
 								for(k=0;k<7;k++){
 									tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
@@ -194,10 +194,97 @@ int percursoPos(t_no* r){
 	return 0;
 }
 
+void pressioneEnter(){
+	printf("Pressione Enter para continuar\n");
+	getchar();
+}
+
+t_no* organizaRodada(t_no* tab){
+	t_no* tab2;
+	int posicao, naovalido = 1;
+	mostraTabuleiro(tab);
+	printf("\n\n");
+	if(tab->jogador == 1){
+		printf("Vez do Computador MUAHAHAHAHAHAHA!\n\n¯\\_(ツ)_/¯\n\n");
+		printf("Que peca mover?\n");
+		scanf("%d", &posicao);
+		getchar();
+		printf("Computador selecionou a posicao %d\n\n", posicao);
+
+	}
+	else{
+		printf("Sua vez!!!\n\n:)\n\n");
+		printf("Que peca mover?\n");
+		scanf("%d", &posicao);
+		getchar();
+		while(naovalido){
+			naovalido = 0;	
+			while(posicao < 1 || posicao > 6){
+				printf("Esta posicao não existe no tabuleiro, escolha outra\n");
+				scanf("%d", &posicao);
+				getchar();
+				naovalido = 1;
+			}
+			while(tab->tabuleiro[1][posicao] == 0){
+				printf("Posicao invalida, não existem pedras nesta, escolha outra\n");
+				scanf("%d", &posicao);
+				getchar();
+				naovalido = 1;
+			}
+			printf("Voce selecionou a posicao %d\n\n", posicao); 
+		}
+	}
+	pressioneEnter();
+	tab2 = montaJogada(posicao, tab);
+	free(tab);
+	return tab2;
+}
+
+int organizaPartida(){
+	char comeca;
+	t_no* tab;
+	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n\n\n");
+	pressioneEnter();
+	printf("Deseja comecar o jogo?? (S/N)\n\n");
+	scanf("%c", &comeca);
+	getchar();
+	while(comeca != 'S' && comeca != 's' && comeca != 'N' && comeca != 'n'){
+		printf("Resposta invalida\n");
+		printf("Deseja comecar o jogo?? (S/N)\n\n");
+		scanf(" %c", &comeca);
+		getchar();
+	}
+	if(comeca == 'S' || comeca == 's'){
+		tab = criaTabuleiro(2);
+	}
+	else{
+		tab = criaTabuleiro(1);
+	}
+	while(!testeAcabou(tab)){
+		tab = organizaRodada(tab);
+	}
+	printf("O jogo acabou!!!!\n\n\n");
+	mostraTabuleiro(tab);
+	if(tab->tabuleiro[1][6] > tab->tabuleiro[0][6]){
+		printf("Voce ganhou!!!! AEEHOOO\n\n");
+	}
+	else if(tab->tabuleiro[1][6] < tab->tabuleiro[0][6]){
+		printf("O computador ganhou!!!! IXIIIIII\n\n");
+	}
+	else{
+		printf("Pirigou, o jogo empatou!!!\n\n");
+	}
+	pressioneEnter();
+	printf("Fim de jogo!\n");
+	return 0;
+}
+
 int main(){
-	t_no* tab = criaTabuleiro();
+	t_no* tab = criaTabuleiro(1);
 	criaArvore(tab, 4);
 	printf("\n");
 	percursoPos(tab);
+	removeArvore(tab);
+	organizaPartida();
 	return 0;
 }
