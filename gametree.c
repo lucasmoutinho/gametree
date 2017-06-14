@@ -50,6 +50,20 @@ t_no* copiaTabuleiro(t_no* tab){
 	return tab2;
 }
 
+int removeArvore(t_no* r){
+	if(r == NULL){
+		return 0;
+	}
+	removeArvore(r->first);
+	removeArvore(r->second);
+	removeArvore(r->third);
+	removeArvore(r->fourth);
+	removeArvore(r->fifth);
+	removeArvore(r->sixth);
+	free(r);
+	return 0;
+}
+
 void mostraTabuleiro(t_no* tab){
 	int i = 0, j;
 	printf("  ");
