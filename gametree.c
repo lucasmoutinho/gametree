@@ -332,7 +332,6 @@ t_no* organizaRodada(t_no* tab){
 	if(tab->jogador == 1){
 		printf("Vez do Computador!\n\n¯\\_(ツ)_/¯\n\n");
 		posicao = decisaoComputador(tab);
-		printf("Vez do Computador!\n\n");
 		printf("Computador selecionou a posicao %d\n\n", posicao);
 	}
 	else{
