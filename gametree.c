@@ -212,7 +212,7 @@ t_no* organizaRodada(t_no* tab){
 	mostraTabuleiro(tab);
 	printf("\n\n");
 	if(tab->jogador == 1){
-		printf("Vez do Computador!\n\n¯\\_(ツ)_/¯\n\n");
+		printf("Vez do Computador!\n\n");
 		printf("Que peca mover?\n");
 		scanf("%d", &posicao);
 		getchar();
@@ -265,20 +265,15 @@ t_no* organizaRodada(t_no* tab){
 int organizaPartida(){
 	char comeca;
 	t_no* tab;
-<<<<<<< HEAD
-	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n");
-	printf("Deseja comecar o jogo? (S/N)\n\n");
-=======
 	limpaTela();
-	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n\n\n");
+	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n\n");
 	pressioneEnter();
-	printf("Deseja comecar o jogo?? (S/N)\n\n");
->>>>>>> cd483ff80bca3850b15938f6e166e99950b60ab1
+	printf("Deseja comecar jogando? (S/N)\n\n");
 	scanf("%c", &comeca);
 	getchar();
 	while(comeca != 'S' && comeca != 's' && comeca != 'N' && comeca != 'n'){
 		printf("\nResposta invalida\n\n");
-		printf("Deseja comecar o jogo? (S/N)\n\n");
+		printf("Deseja comecar jogando? (S/N)\n\n");
 		scanf(" %c", &comeca);
 		getchar();
 	}
@@ -289,22 +284,23 @@ int organizaPartida(){
 		tab = criaTabuleiro(1);
 	}
 	printf("\n");
-	pressioneEnter();
+	limpaTela();
 	while(!testeAcabou(tab)){
 		tab = organizaRodada(tab);
 	}
-	printf("O jogo acabou!\n\n\n");
 	mostraTabuleiro(tab);
+	printf("\n\nO jogo acabou!\n\n");
 	if(tab->tabuleiro[1][6] > tab->tabuleiro[0][6]){
 		printf("Voce ganhou! \n\n");
 	}
 	else if(tab->tabuleiro[1][6] < tab->tabuleiro[0][6]){
-		printf("O computador ganhou!\n\n");
+		printf("O computador ganhou...");
+		printf("\n\n¯\\_(ツ)_/¯\n\n");
+	
 	}
 	else{
 		printf("O jogo empatou!\n\n");
 	}
-	printf("Fim de jogo!\n");
 	pressioneEnter();
 	return 0;
 }
