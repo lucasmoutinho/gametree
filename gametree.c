@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int dificuldade;
+
 typedef struct no{
 	/*Jogador 1 == Computador && Jogador 2 == Usuário*/
 	int tabuleiro[2][7];
@@ -206,6 +208,122 @@ void pressioneEnter(){
 	limpaTela();
 }
 
+int arrumaAtual(atual){
+	if(atual == -1000){
+		return 1000;
+	}
+	return atual;
+}
+
+int minimax(t_no* tab){
+	if(tab == NULL){
+		return -1000;
+	}
+	if(tab->first==NULL && tab->second==NULL && tab->third==NULL && tab->fourth==NULL && tab->fifth==NULL && tab->sixth==NULL){
+		if(testeAcabou(tab)){
+			if(tab->tabuleiro[0][6] > tab->tabuleiro[1][6]){
+				return 100;
+			}
+			else if(tab->tabuleiro[0][6] < tab->tabuleiro[1][6]){
+				return -100;
+			}
+			else{
+				return 0;
+			}
+		}
+		return (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
+	}
+	int valor, atual;
+	if(tab->jogador == 1){
+		valor = minimax(tab->first);
+		atual = minimax(tab->second);
+		if(valor < atual){
+			valor = atual;
+		}
+		atual = minimax(tab->third);
+		if(valor < atual){
+			valor = atual;
+		}
+		atual = minimax(tab->fourth);
+		if(valor < atual){
+			valor = atual;
+		}
+		atual = minimax(tab->fifth);
+		if(valor < atual){
+			valor = atual;
+		}
+		atual = minimax(tab->sixth);
+		if(valor < atual){
+			valor = atual;
+		}	
+	}
+	else{
+		valor = minimax(tab->first);
+		valor = arrumaAtual(valor);
+		atual = minimax(tab->second);
+		atual = arrumaAtual(atual);
+		if(valor > atual){
+			valor = atual;
+		}
+		atual = minimax(tab->third);
+		atual = arrumaAtual(atual);
+		if(valor > atual){
+			valor = atual;
+		}
+		atual = minimax(tab->fourth);
+		atual = arrumaAtual(atual);
+		if(valor > atual){
+			valor = atual;
+		}
+		atual = minimax(tab->fifth);
+		atual = arrumaAtual(atual);
+		if(valor > atual){
+			valor = atual;
+		}
+		atual = minimax(tab->sixth);
+		atual = arrumaAtual(atual);
+		if(valor > atual){
+			valor = atual;
+		}	
+	}
+	return valor;
+}
+
+int decisaoComputador(t_no* tab){
+	t_no* arvore = copiaTabuleiro(tab);
+	int posicao, atual, max;
+	criaArvore(arvore, dificuldade);
+	max = minimax(arvore->first);
+	posicao = 1;
+	atual = minimax(arvore->second);
+	if(max < atual){
+		max = atual;
+		posicao = 2;
+	}
+	atual = minimax(arvore->third);
+	if(max < atual){
+		max = atual;
+		posicao = 3;
+	}
+	atual = minimax(arvore->fourth);
+	if(max < atual){
+		max = atual;
+		posicao = 4;
+	}
+	atual = minimax(arvore->fifth);
+	if(max < atual){
+		max = atual;
+		posicao = 5;
+	}
+	atual = minimax(arvore->sixth);
+	if(max < atual){
+		max = atual;
+		posicao = 6;
+	}
+	removeArvore(arvore);
+	return posicao;
+}
+
 t_no* organizaRodada(t_no* tab){
 	t_no* tab2;
 	int posicao, naovalido = 1;
@@ -213,26 +331,8 @@ t_no* organizaRodada(t_no* tab){
 	printf("\n\n");
 	if(tab->jogador == 1){
 		printf("Vez do Computador!\n\n¯\\_(ツ)_/¯\n\n");
-		printf("Que peca mover?\n");
-		scanf("%d", &posicao);
-		getchar();
-		while(naovalido){
-			naovalido = 0;	
-			while(posicao < 1 || posicao > 6){
-				printf("Esta posicao nao existe no tabuleiro, escolha outra\n");
-				scanf("%d", &posicao);
-				getchar();
-				naovalido = 1;
-			}
-			while(tab->tabuleiro[0][posicao-1] == 0){
-				printf("Posicao invalida, nao existem pedras nesta, escolha outra\n");
-				scanf("%d", &posicao);
-				getchar();
-				naovalido = 1;
-			}
-		}
+		posicao = decisaoComputador(tab);
 		printf("Computador selecionou a posicao %d\n\n", posicao);
-
 	}
 	else{
 		printf("Sua vez!\n\n");
@@ -248,7 +348,7 @@ t_no* organizaRodada(t_no* tab){
 				naovalido = 1;
 			}
 			while(tab->tabuleiro[1][posicao-1] == 0){
-		;		printf("Nao existem pedras nesta posicao, escolha outra: ");
+				printf("Nao existem pedras nesta posicao, escolha outra: ");
 				scanf("%d", &posicao);
 				getchar();
 				naovalido = 1;
@@ -262,18 +362,37 @@ t_no* organizaRodada(t_no* tab){
 	return tab2;
 }
 
+int dificuldadeDoJogo(){
+	char hardenough;
+	printf("Qual a dificuldade do jogo?\n\n");
+	printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D): ");
+	scanf(" %c", &hardenough);
+	getchar();
+	printf("\n");
+	while(hardenough!='F' && hardenough!='f' && hardenough!='D' && hardenough!='d' && hardenough!='M' && hardenough!='m'){
+		printf("Opcao Invalida\n");
+		printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D): ");
+		scanf(" %c", &hardenough);
+		getchar();
+		printf("\n");
+	}
+	pressioneEnter();
+	if(hardenough == 'F' || hardenough == 'f'){
+		return 4;
+	}
+	else if(hardenough == 'M' || hardenough == 'm'){
+		return 5;
+	}
+	return 6;
+}
+
 int organizaPartida(){
 	char comeca;
 	t_no* tab;
-<<<<<<< HEAD
-	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n");
-	printf("Deseja comecar o jogo? (S/N)\n\n");
-=======
 	limpaTela();
 	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n\n\n");
 	pressioneEnter();
 	printf("Deseja comecar o jogo?? (S/N)\n\n");
->>>>>>> cd483ff80bca3850b15938f6e166e99950b60ab1
 	scanf("%c", &comeca);
 	getchar();
 	while(comeca != 'S' && comeca != 's' && comeca != 'N' && comeca != 'n'){
@@ -290,6 +409,7 @@ int organizaPartida(){
 	}
 	printf("\n");
 	pressioneEnter();
+	dificuldade = dificuldadeDoJogo();
 	while(!testeAcabou(tab)){
 		tab = organizaRodada(tab);
 	}
