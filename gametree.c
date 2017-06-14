@@ -389,8 +389,8 @@ int dificuldadeDoJogo(){
 	getchar();
 	printf("\n");
 	while(hardenough!='F' && hardenough!='f' && hardenough!='D' && hardenough!='d' && hardenough!='M' && hardenough!='m'){
-		printf("Opcao Invalida\n");
-		printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D): ");
+		printf("\nOpcao Invalida\n");
+		printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D): \n\n");
 		scanf(" %c", &hardenough);
 		getchar();
 		printf("\n");
@@ -411,7 +411,6 @@ int organizaPartida(){
 	limpaTela();
 	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n\n");
 	pressioneEnter();
-	printf("Deseja comecar o jogo?? (S/N)\n\n");
 	printf("Deseja comecar jogando? (S/N)\n\n");
 	scanf("%c", &comeca);
 	getchar();
