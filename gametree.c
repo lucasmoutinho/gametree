@@ -333,24 +333,6 @@ t_no* organizaRodada(t_no* tab){
 		printf("Vez do Computador!\n\n¯\\_(ツ)_/¯\n\n");
 		posicao = decisaoComputador(tab);
 		printf("Vez do Computador!\n\n");
-		printf("Que peca mover?\n");
-		scanf("%d", &posicao);
-		getchar();
-		while(naovalido){
-			naovalido = 0;	
-			while(posicao < 1 || posicao > 6){
-				printf("Esta posicao nao existe no tabuleiro, escolha outra\n");
-				scanf("%d", &posicao);
-				getchar();
-				naovalido = 1;
-			}
-			while(tab->tabuleiro[0][posicao-1] == 0){
-				printf("Posicao invalida, nao existem pedras nesta, escolha outra\n");
-				scanf("%d", &posicao);
-				getchar();
-				naovalido = 1;
-			}
-		}
 		printf("Computador selecionou a posicao %d\n\n", posicao);
 	}
 	else{
