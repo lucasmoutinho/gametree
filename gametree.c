@@ -81,16 +81,16 @@ void mostraTabuleiro(t_no* tab){
 
 int testeAcabou(t_no* tab){
 	int acabou = 1, j = 0;
-	if(tab->jogador == 1){
-		while(acabou == 1 && j<6){
-			if(tab->tabuleiro[0][j] != 0){
-				acabou = 0;
-			}
-			j++;
+	while(acabou && j<6){
+		if(tab->tabuleiro[0][j] != 0){
+			acabou = 0;
 		}
+		j++;
 	}
-	else{
-		while(acabou == 1 && j<6){
+	j=0;
+	if(!acabou){
+		acabou = 1;
+		while(acabou && j<6){
 			if(tab->tabuleiro[1][j] != 0){
 				acabou = 0;
 			}
@@ -138,16 +138,13 @@ t_no* montaJogada(int posicao, t_no* tab){
 							}
 						}
 						if(pedras == 0 && testeAcabou(tab2)){
-							if(tab->jogador==1){
-								for(k=0;k<7;k++){
-									tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
-								}
-							}	
-							else{
-								for(k=0;k<7;k++){
-									tab2->tabuleiro[0][6]+=tab2->tabuleiro[0][k];
-								}
+							for(k=0;k<6;k++){
+								tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
+								tab2->tabuleiro[1][k]=0;
+								tab2->tabuleiro[0][6]+=tab2->tabuleiro[0][k];
+								tab2->tabuleiro[0][k]=0;
 							}
+
 						}
 						j++;
 					}
@@ -209,6 +206,21 @@ t_no* organizaRodada(t_no* tab){
 		printf("Que peca mover?\n");
 		scanf("%d", &posicao);
 		getchar();
+		while(naovalido){
+			naovalido = 0;	
+			while(posicao < 1 || posicao > 6){
+				printf("Esta posicao não existe no tabuleiro, escolha outra\n");
+				scanf("%d", &posicao);
+				getchar();
+				naovalido = 1;
+			}
+			while(tab->tabuleiro[0][posicao-1] == 0){
+				printf("Posicao invalida, não existem pedras nesta, escolha outra\n");
+				scanf("%d", &posicao);
+				getchar();
+				naovalido = 1;
+			}
+		}
 		printf("Computador selecionou a posicao %d\n\n", posicao);
 
 	}
@@ -260,6 +272,8 @@ int organizaPartida(){
 	else{
 		tab = criaTabuleiro(1);
 	}
+	printf("\n");
+	pressioneEnter();
 	while(!testeAcabou(tab)){
 		tab = organizaRodada(tab);
 	}
