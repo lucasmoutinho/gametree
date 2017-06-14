@@ -13,6 +13,14 @@ typedef struct no{
 	struct no* sixth;
 } t_no;
 
+void limpaTela(){
+	#ifdef _WIN32
+    	system("cls");
+	#else
+	    system("clear");
+	#endif
+}
+
 t_no* criaNo(){
 	t_no* no = (t_no*)malloc(sizeof(t_no));
 	no->jogador = 0;
@@ -66,15 +74,16 @@ int removeArvore(t_no* r){
 
 void mostraTabuleiro(t_no* tab){
 	int i = 0, j;
-	printf("  ");
+	printf("  ----------TABULEIRO----------\n\n\n");
+	printf("    ");
 	for(j=5;j>=0;j--){
-		printf("%d ", tab->tabuleiro[i][j]);
+		printf(" %2d ", tab->tabuleiro[i][j]);
 	}
-	printf("\n%d             %d\n", tab->tabuleiro[0][6], tab->tabuleiro[1][6]);
+	printf("\n  %2d                        %2d\n", tab->tabuleiro[0][6], tab->tabuleiro[1][6]);
 	i++;
-	printf("  ");
+	printf("    ");
 	for(j=0;j<6;j++){
-		printf("%d ", tab->tabuleiro[i][j]);
+		printf(" %2d ", tab->tabuleiro[i][j]);
 	}
 	printf("\n");
 }
@@ -194,6 +203,7 @@ int percursoPos(t_no* r){
 void pressioneEnter(){
 	printf("Pressione Enter para continuar\n");
 	getchar();
+	limpaTela();
 }
 
 t_no* organizaRodada(t_no* tab){
@@ -255,8 +265,15 @@ t_no* organizaRodada(t_no* tab){
 int organizaPartida(){
 	char comeca;
 	t_no* tab;
+<<<<<<< HEAD
 	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n");
 	printf("Deseja comecar o jogo? (S/N)\n\n");
+=======
+	limpaTela();
+	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n\n\n");
+	pressioneEnter();
+	printf("Deseja comecar o jogo?? (S/N)\n\n");
+>>>>>>> cd483ff80bca3850b15938f6e166e99950b60ab1
 	scanf("%c", &comeca);
 	getchar();
 	while(comeca != 'S' && comeca != 's' && comeca != 'N' && comeca != 'n'){
@@ -293,11 +310,6 @@ int organizaPartida(){
 }
 
 int main(){
-	t_no* tab = criaTabuleiro(1);
-	criaArvore(tab, 4);
-	printf("\n");
-	percursoPos(tab);
-	removeArvore(tab);
 	organizaPartida();
 	return 0;
 }
