@@ -49,8 +49,8 @@ t_no* criaTabuleiro(int comeca){
 }
 
 t_no* copiaTabuleiro(t_no* tab){
-	t_no* tab2 = criaNo();
 	int i, j;
+	t_no* tab2 = criaNo();
 	tab2->jogador = tab->jogador;
 	for(i=0;i<2;i++){
 		for(j=0;j<7;j++){
@@ -90,7 +90,7 @@ void mostraTabuleiro(t_no* tab){
 	printf("\n");
 }
 
-int testeAcabou(t_no* tab){
+int jogoAcabou(t_no* tab){
 	int acabou = 1, j = 0;
 	while(acabou && j<6){
 		if(tab->tabuleiro[0][j] != 0){
@@ -111,9 +111,57 @@ int testeAcabou(t_no* tab){
 	return acabou;
 }
 
+void testeIncremento(t_no* tab, int* i, int* j){
+	int cond1 = (tab->jogador == 1 && *i == 1);
+	int cond2 = (tab->jogador == 2 && *i == 0);
+	if( *j == 6 && ( cond1 || cond2 )){
+		*j=0;
+		if(*i){
+			*i=0;
+		}
+		else{
+			*i=1;
+		}
+	}
+}
+
+void atualizaJogador(t_no* tab, t_no* tab2){
+	if(tab->jogador == 1){
+		tab2->jogador = 2;
+	}
+	else{
+		tab2->jogador = 1;
+	}
+}
+
+void testeCaptura(t_no* tab, t_no* tab2, int i, int j){
+	int cond1 = (tab2->tabuleiro[0][j] == 1 && tab2->tabuleiro[1][5-j] != 0);
+	int cond2 = (tab2->tabuleiro[1][j] == 1 && tab2->tabuleiro[0][5-j] != 0);
+	if(tab->jogador == 1 && i == 0 && cond1){
+		tab2->tabuleiro[0][6] += (1 + tab2->tabuleiro[1][5-j]);
+		tab2->tabuleiro[1][5-j] = 0;
+		tab2->tabuleiro[0][j] = 0;
+	}
+	else if(tab->jogador == 2 && i == 1 && cond2){
+		tab2->tabuleiro[1][6] += (1 + tab2->tabuleiro[0][5-j]);
+		tab2->tabuleiro[0][5-j] = 0;
+		tab2->tabuleiro[1][j] = 0;
+	}
+}
+
+void finalizacaoKahala(t_no* tab2){
+	int k;
+	for(k=0;k<6;k++){
+		tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
+		tab2->tabuleiro[1][k]=0;
+		tab2->tabuleiro[0][6]+=tab2->tabuleiro[0][k];
+		tab2->tabuleiro[0][k]=0;
+	}
+}
+
 t_no* montaJogada(int posicao, t_no* tab){
+	int pedras, i, j;
 	t_no* tab2 = NULL;
-	int pedras, i, j, k;
 	i = (tab->jogador)-1;
 	j = posicao-1;
 	pedras = tab->tabuleiro[i][j];
@@ -124,41 +172,16 @@ t_no* montaJogada(int posicao, t_no* tab){
 		while(pedras != 0){
 			while(pedras != 0 && i<2){
 				while(pedras != 0 && j<7){
-					if( j == 6 && ((tab->jogador == 1 && i==1) || (tab->jogador == 2 && i==0))){
-						j=0;
-						if(i==1){
-							i=0;
-						}
-						else{
-							i=1;
-						}
-					}
+					testeIncremento(tab, &i, &j);
 					tab2->tabuleiro[i][j]+=1;
 					pedras--;
-					if(pedras == 0 && j != 6){
-						if(tab->jogador == 1){
-							tab2->jogador = 2;
+					if(pedras == 0){
+						if(j!=6){
+							atualizaJogador(tab, tab2);
+							testeCaptura(tab, tab2, i, j);
 						}
-						else{
-							tab2->jogador = 1;
-						}
-						if(tab->jogador == 1 && i == 0 && tab2->tabuleiro[0][j] == 1 && tab2->tabuleiro[1][5-j] != 0){
-							tab2->tabuleiro[0][6] += (1 + tab2->tabuleiro[1][5-j]);
-							tab2->tabuleiro[1][5-j] = 0;
-							tab2->tabuleiro[0][j] = 0;
-						}
-						else if(tab->jogador == 2 && i == 1 && tab2->tabuleiro[1][j] == 1 && tab2->tabuleiro[0][5-j] != 0){
-							tab2->tabuleiro[1][6] += (1 + tab2->tabuleiro[0][5-j]);
-							tab2->tabuleiro[0][5-j] = 0;
-							tab2->tabuleiro[1][j] = 0;
-						}
-					}
-					if(testeAcabou(tab2)){
-						for(k=0;k<6;k++){
-							tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
-							tab2->tabuleiro[1][k]=0;
-							tab2->tabuleiro[0][6]+=tab2->tabuleiro[0][k];
-							tab2->tabuleiro[0][k]=0;
+						if(jogoAcabou(tab2)){
+							finalizacaoKahala(tab2);
 						}
 					}
 					j++;
@@ -218,12 +241,21 @@ int arrumaAtual(atual){
 	return atual;
 }
 
+int ehFolha(t_no* tab){
+	int cond1 = (tab->first==NULL && tab->second==NULL && tab->third==NULL);
+	int cond2 = (tab->fourth==NULL && tab->fifth==NULL && tab->sixth==NULL);
+	if(cond1 && cond2){
+		return 1;
+	}
+	return 0;
+}
+
 int minimax(t_no* tab){
 	if(tab == NULL){
 		return -1000;
 	}
-	if(tab->first==NULL && tab->second==NULL && tab->third==NULL && tab->fourth==NULL && tab->fifth==NULL && tab->sixth==NULL){
-		if(testeAcabou(tab)){
+	if(ehFolha(tab)){
+		if(jogoAcabou(tab)){
 			if(tab->tabuleiro[0][6] > tab->tabuleiro[1][6]){
 				return 100;
 			}
@@ -238,6 +270,7 @@ int minimax(t_no* tab){
 	}
 	int valor, atual;
 	if(tab->jogador == 1){
+		/*MAXIMIZA*/
 		valor = minimax(tab->first);
 		atual = minimax(tab->second);
 		if(valor < atual){
@@ -261,6 +294,7 @@ int minimax(t_no* tab){
 		}	
 	}
 	else{
+		/*MINIMIZA*/
 		valor = minimax(tab->first);
 		valor = arrumaAtual(valor);
 		atual = minimax(tab->second);
@@ -365,16 +399,25 @@ t_no* organizaRodada(t_no* tab){
 	return tab2;
 }
 
+int opcoesInvalidas(char hardenough){
+	int cond1 = (hardenough!='F' && hardenough!='f' && hardenough!='D' && hardenough!='d');
+	int cond2 = (hardenough!='M' && hardenough!='m' && hardenough!='B' && hardenough!='b');
+	if(cond1 && cond2){
+		return 1;
+	}
+	return 0;
+}
+
 int dificuldadeDoJogo(){
 	char hardenough;
 	printf("Qual a dificuldade do jogo?\n\n");
-	printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D):\n\n");
+	printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D) -- BRUTAL(B):\n\n");
 	scanf(" %c", &hardenough);
 	getchar();
 	printf("\n");
-	while(hardenough!='F' && hardenough!='f' && hardenough!='D' && hardenough!='d' && hardenough!='M' && hardenough!='m'){
+	while(opcoesInvalidas(hardenough)){
 		printf("\nOpcao Invalida\n");
-		printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D): \n\n");
+		printf("Opcoes: FACIL(F) -- MEDIO(M) -- DIFICIL(D) -- BRUTAL(B): \n\n");
 		scanf(" %c", &hardenough);
 		getchar();
 		printf("\n");
@@ -386,41 +429,62 @@ int dificuldadeDoJogo(){
 	else if(hardenough == 'M' || hardenough == 'm'){
 		return 5;
 	}
-	return 6;
+	else if(hardenough == 'D' || hardenough == 'd'){
+		return 6;
+	}
+	return 8;
+}
+
+int perguntaAoUsuario(int pergunta){
+	char resposta;
+	if(pergunta){
+		/*PERGUNTA 1*/
+		printf("Deseja jogar novamente? (S/N)\n\n");
+	}
+	else{
+		/*PERGUNTA 0*/
+		printf("Deseja comecar jogando? (S/N)\n\n");	
+	}
+	scanf("%c", &resposta);
+	getchar();
+	while(resposta != 'S' && resposta != 's' && resposta != 'N' && resposta != 'n'){
+		printf("\nResposta invalida\n\n");
+		if(pergunta){
+			printf("Deseja jogar novamente? (S/N)\n\n");
+		}
+		else{
+			printf("Deseja comecar jogando? (S/N)\n\n");	
+		}
+		scanf(" %c", &resposta);
+		getchar();
+	}
+	pressioneEnter();
+	if(resposta == 'S' || resposta == 's'){
+		return 1;
+	}
+	return 0;
 }
 
 int organizaPartida(){
-	char comeca;
 	t_no* tab;
 	limpaTela();
 	printf("***** BEM VINDO AO JOGO MANCALA *****\n\n\n");
 	pressioneEnter();
-	printf("Deseja comecar jogando? (S/N)\n\n");
-	scanf("%c", &comeca);
-	getchar();
-	while(comeca != 'S' && comeca != 's' && comeca != 'N' && comeca != 'n'){
-		printf("\nResposta invalida\n\n");
-		printf("Deseja comecar jogando? (S/N)\n\n");
-		scanf(" %c", &comeca);
-		getchar();
-	}
-	if(comeca == 'S' || comeca == 's'){
+	if(perguntaAoUsuario(0)){
 		tab = criaTabuleiro(2);
 	}
 	else{
 		tab = criaTabuleiro(1);
 	}
-	printf("\n");
-	pressioneEnter();
 	dificuldade = dificuldadeDoJogo();
 	limpaTela();
-	while(!testeAcabou(tab)){
+	while(!jogoAcabou(tab)){
 		tab = organizaRodada(tab);
 	}
 	mostraTabuleiro(tab);
 	printf("\n\nO jogo acabou!\n\n");
 	if(tab->tabuleiro[1][6] > tab->tabuleiro[0][6]){
-		printf("Voce ganhou! \n\n");
+		printf("Voce ganhou!\n\n");
 	}
 	else if(tab->tabuleiro[1][6] < tab->tabuleiro[0][6]){
 		printf("O computador ganhou...");
@@ -430,10 +494,14 @@ int organizaPartida(){
 		printf("O jogo empatou!\n\n");
 	}
 	pressioneEnter();
+	free(tab);
 	return 0;
 }
 
 int main(){
-	organizaPartida();
+	do{
+		organizaPartida();
+	}
+	while(perguntaAoUsuario(1));
 	return 0;
 }
