@@ -152,13 +152,13 @@ t_no* montaJogada(int posicao, t_no* tab){
 							tab2->tabuleiro[0][5-j] = 0;
 							tab2->tabuleiro[1][j] = 0;
 						}
-						if(testeAcabou(tab2)){
-							for(k=0;k<6;k++){
-								tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
-								tab2->tabuleiro[1][k]=0;
-								tab2->tabuleiro[0][6]+=tab2->tabuleiro[0][k];
-								tab2->tabuleiro[0][k]=0;
-							}
+					}
+					if(testeAcabou(tab2)){
+						for(k=0;k<6;k++){
+							tab2->tabuleiro[1][6]+=tab2->tabuleiro[1][k];
+							tab2->tabuleiro[1][k]=0;
+							tab2->tabuleiro[0][6]+=tab2->tabuleiro[0][k];
+							tab2->tabuleiro[0][k]=0;
 						}
 					}
 					j++;
