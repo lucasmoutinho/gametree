@@ -76,7 +76,8 @@ int removeArvore(t_no* r){
 
 void mostraTabuleiro(t_no* tab){
 	int i = 0, j;
-	printf("  ----------TABULEIRO----------\n\n\n");
+	printf("  ----------TABULEIRO----------\n");
+	printf("PC:   6   5   4   3   2   1\n\n\n\n");
 	printf("    ");
 	for(j=5;j>=0;j--){
 		printf(" %2d ", tab->tabuleiro[i][j]);
@@ -87,7 +88,7 @@ void mostraTabuleiro(t_no* tab){
 	for(j=0;j<6;j++){
 		printf(" %2d ", tab->tabuleiro[i][j]);
 	}
-	printf("\n");
+	printf("\n\n\n\nVC:   1   2   3   4   5   6\n");
 }
 
 int jogoAcabou(t_no* tab){
@@ -250,9 +251,13 @@ int ehFolha(t_no* tab){
 	return 0;
 }
 
-int minimax(t_no* tab){
+int minimax(t_no* tab, int maximiza){
+	/*Flag maximiza refere-se ao estado anterior, so serve pra analise do NULL*/
 	if(tab == NULL){
-		return -1000;
+		if(maximiza){
+			return -1000;
+		}
+		return 1000;
 	}
 	if(ehFolha(tab)){
 		if(jogoAcabou(tab)){
@@ -271,54 +276,50 @@ int minimax(t_no* tab){
 	int valor, atual;
 	if(tab->jogador == 1){
 		/*MAXIMIZA*/
-		valor = minimax(tab->first);
-		atual = minimax(tab->second);
+		maximiza = 1;
+		valor = minimax(tab->first,maximiza);
+		atual = minimax(tab->second,maximiza);
 		if(valor < atual){
 			valor = atual;
 		}
-		atual = minimax(tab->third);
+		atual = minimax(tab->third,maximiza);
 		if(valor < atual){
 			valor = atual;
 		}
-		atual = minimax(tab->fourth);
+		atual = minimax(tab->fourth,maximiza);
 		if(valor < atual){
 			valor = atual;
 		}
-		atual = minimax(tab->fifth);
+		atual = minimax(tab->fifth,maximiza);
 		if(valor < atual){
 			valor = atual;
 		}
-		atual = minimax(tab->sixth);
+		atual = minimax(tab->sixth,maximiza);
 		if(valor < atual){
 			valor = atual;
 		}	
 	}
 	else{
 		/*MINIMIZA*/
-		valor = minimax(tab->first);
-		valor = arrumaAtual(valor);
-		atual = minimax(tab->second);
-		atual = arrumaAtual(atual);
+		maximiza = 0;
+		valor = minimax(tab->first,maximiza);
+		atual = minimax(tab->second,maximiza);
 		if(valor > atual){
 			valor = atual;
 		}
-		atual = minimax(tab->third);
-		atual = arrumaAtual(atual);
+		atual = minimax(tab->third,maximiza);
 		if(valor > atual){
 			valor = atual;
 		}
-		atual = minimax(tab->fourth);
-		atual = arrumaAtual(atual);
+		atual = minimax(tab->fourth,maximiza);
 		if(valor > atual){
 			valor = atual;
 		}
-		atual = minimax(tab->fifth);
-		atual = arrumaAtual(atual);
+		atual = minimax(tab->fifth,maximiza);
 		if(valor > atual){
 			valor = atual;
 		}
-		atual = minimax(tab->sixth);
-		atual = arrumaAtual(atual);
+		atual = minimax(tab->sixth,maximiza);
 		if(valor > atual){
 			valor = atual;
 		}	
@@ -330,29 +331,29 @@ int decisaoComputador(t_no* tab){
 	t_no* arvore = copiaTabuleiro(tab);
 	int posicao, atual, max;
 	criaArvore(arvore, dificuldade);
-	max = minimax(arvore->first);
+	max = minimax(arvore->first,1);
 	posicao = 1;
-	atual = minimax(arvore->second);
+	atual = minimax(arvore->second,1);
 	if(max < atual){
 		max = atual;
 		posicao = 2;
 	}
-	atual = minimax(arvore->third);
+	atual = minimax(arvore->third,1);
 	if(max < atual){
 		max = atual;
 		posicao = 3;
 	}
-	atual = minimax(arvore->fourth);
+	atual = minimax(arvore->fourth,1);
 	if(max < atual){
 		max = atual;
 		posicao = 4;
 	}
-	atual = minimax(arvore->fifth);
+	atual = minimax(arvore->fifth,1);
 	if(max < atual){
 		max = atual;
 		posicao = 5;
 	}
-	atual = minimax(arvore->sixth);
+	atual = minimax(arvore->sixth,1);
 	if(max < atual){
 		max = atual;
 		posicao = 6;
@@ -445,7 +446,7 @@ int perguntaAoUsuario(int pergunta){
 		/*PERGUNTA 0*/
 		printf("Deseja comecar jogando? (S/N)\n\n");	
 	}
-	scanf("%c", &resposta);
+	scanf(" %c", &resposta);
 	getchar();
 	while(resposta != 'S' && resposta != 's' && resposta != 'N' && resposta != 'n'){
 		printf("\nResposta invalida\n\n");
