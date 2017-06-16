@@ -235,13 +235,6 @@ void pressioneEnter(){
 	limpaTela();
 }
 
-int arrumaAtual(atual){
-	if(atual == -1000){
-		return 1000;
-	}
-	return atual;
-}
-
 int ehFolha(t_no* tab){
 	int cond1 = (tab->first==NULL && tab->second==NULL && tab->third==NULL);
 	int cond2 = (tab->fourth==NULL && tab->fifth==NULL && tab->sixth==NULL);
