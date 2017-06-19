@@ -255,10 +255,10 @@ int minimax(t_no* tab, int maximiza){
 	if(ehFolha(tab)){
 		if(jogoAcabou(tab)){
 			if(tab->tabuleiro[0][6] > tab->tabuleiro[1][6]){
-				return 100;
+				return 100 + (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
 			}
 			else if(tab->tabuleiro[0][6] < tab->tabuleiro[1][6]){
-				return -100;
+				return -100 + (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
 			}
 			else{
 				return 0;
