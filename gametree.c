@@ -244,27 +244,29 @@ int ehFolha(t_no* tab){
 	return 0;
 }
 
-int minimax(t_no* tab, int maximiza){
-	/*Flag maximiza refere-se ao estado anterior, so serve pra analise do NULL*/
+int avalia(t_no* tab, int maximiza){
 	if(tab == NULL){
 		if(maximiza){
 			return -1000;
 		}
 		return 1000;
 	}
-	if(ehFolha(tab)){
-		if(jogoAcabou(tab)){
-			if(tab->tabuleiro[0][6] > tab->tabuleiro[1][6]){
-				return 100 + (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
-			}
-			else if(tab->tabuleiro[0][6] < tab->tabuleiro[1][6]){
-				return -100 + (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
-			}
-			else{
-				return 0;
-			}
+	if(jogoAcabou(tab)){
+		if(tab->tabuleiro[0][6] > tab->tabuleiro[1][6]){
+			return 100 + (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
+		}	
+		else if(tab->tabuleiro[0][6] < tab->tabuleiro[1][6]){
+			return -100 + (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
 		}
-		return (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
+		return 0;
+	}
+	return (tab->tabuleiro[0][6] - tab->tabuleiro[1][6]);
+}
+
+int minimax(t_no* tab, int maximiza){
+	/*Flag maximiza refere-se ao estado anterior, so serve pra analise do NULL*/
+	if(tab == NULL || ehFolha(tab)){
+		return avalia(tab, maximiza);
 	}
 	int valor, atual;
 	if(tab->jogador == 1){
